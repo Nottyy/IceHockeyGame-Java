@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class GameFrame extends JFrame {
     private GamePanel gamePanel;
-    public GameFrame(){
+
+    public GameFrame() {
         this.gamePanel = new GamePanel();
         this.add(gamePanel);
         this.setTitle("Ice Hockey Game");

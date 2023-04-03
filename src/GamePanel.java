@@ -9,7 +9,7 @@ import java.util.Random;
 public class GamePanel extends JPanel implements Runnable {
 
     private static final int GAME_WIDTH = 1000;
-    private static final int GAME_HEIGHT = GAME_WIDTH * (5 / 9);
+    private static final int GAME_HEIGHT = (int) (GAME_WIDTH * (0.555));
     private static final Dimension DIMENSION_SIZE = new Dimension(GAME_WIDTH, GAME_HEIGHT);
     private static final int DIAMETER = 20;
     private static final int PADDLE_WIDTH = 25;
@@ -31,6 +31,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.score = new Score(GAME_WIDTH, GAME_HEIGHT);
         this.setFocusable(true);
         this.addKeyListener(new AL());
+        this.setPreferredSize(this.DIMENSION_SIZE);
+        this.thread = new Thread(this);
+        this.thread.start();
     }
 
     public void newBall() {
@@ -42,7 +45,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void paint(Graphics g) {
-
+        this.image = this.createImage(this.getWidth(), this.getHeight());
+        this.graphics = this.image.getGraphics();
+        this.draw(this.graphics);
+        g.drawImage(this.image,0,0,this);
     }
 
     public void draw(Graphics g) {

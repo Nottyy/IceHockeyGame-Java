@@ -2,6 +2,7 @@ package src;
 
 public class IceHockeyGame {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        GameFrame gameFrame = new GameFrame();
+
     }
 }

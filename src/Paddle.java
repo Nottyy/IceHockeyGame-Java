@@ -17,11 +17,20 @@ public class Paddle extends Rectangle {
         switch (this.id){
             case 1:
                 this.fireKeys(e, KeyEvent.VK_W, KeyEvent.VK_S, SPEED);
+                break;
+            case 2:
+                this.fireKeys(e, KeyEvent.VK_UP, KeyEvent.VK_DOWN, SPEED);
+                break;
+        }
+    }
 
+    public void keyReleased(KeyEvent e) {
+        switch (this.id){
+            case 1:
+                this.fireKeys(e, KeyEvent.VK_W, KeyEvent.VK_S, 0);
                 break;
             case 2:
                 this.fireKeys(e, KeyEvent.VK_UP, KeyEvent.VK_DOWN, 0);
-                
                 break;
         }
     }
@@ -37,9 +46,7 @@ public class Paddle extends Rectangle {
         }
     }
 
-    public void keyReleased(KeyEvent e) {
 
-    }
 
     public void setYDirection(int yDirection) {
 

@@ -1,4 +1,8 @@
-package src;
+package src.Models;
+
+import src.Interfaces.IDraw;
+import src.Interfaces.IMove;
+import src.Interfaces.IScore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, IDraw, IMove {
 
     private static final int GAME_WIDTH = 1000;
     private static final int GAME_HEIGHT = (int) (GAME_WIDTH * (0.555));
@@ -23,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private Paddle paddle1;
     private Paddle paddle2;
-    private Score score;
+    private IScore score;
     private Ball ball;
 
     public GamePanel() {
@@ -117,13 +121,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         //gives one point and creates new paddles
         if (this.ball.x <= 0){
-            this.score.player2++;
+            this.score.setPlayer2(this.score.getPlayer2() + 1);
             this.newPaddles();
             this.newBall();
         }
 
         if (this.ball.x >= GAME_WIDTH){
-            this.score.player1++;
+            this.score.setPlayer1(this.score.getPlayer1() + 1);
             this.newPaddles();
             this.newBall();
         }
@@ -147,6 +151,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
 
     public class AL extends KeyAdapter {
 

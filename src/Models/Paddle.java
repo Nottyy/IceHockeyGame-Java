@@ -1,9 +1,12 @@
-package src;
+package src.Models;
+
+import src.Interfaces.IDraw;
+import src.Interfaces.IMove;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class Paddle extends Rectangle {
+public class Paddle extends Rectangle implements IDraw, IMove {
     private final static int SPEED = 10;
     private int id;
     private int yVelocity;

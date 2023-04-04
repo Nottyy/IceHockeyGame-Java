@@ -1,8 +1,10 @@
-package src;
+package src.Models;
+
+import src.Interfaces.IScore;
 
 import java.awt.*;
 
-public class Score extends Rectangle{
+public class Score extends Rectangle implements IScore {
     private static int GAME_WIDTH;
     private static int GAME_HEIGHT;
     public int player1 = 0;
@@ -16,5 +18,25 @@ public class Score extends Rectangle{
         g.setFont(new Font("Calibri", Font.PLAIN, 20));
         g.drawString(String.valueOf(this.player1), this.GAME_WIDTH / 2 - 100,20);
         g.drawString(String.valueOf(this.player2), this.GAME_WIDTH / 2 + 100,20);
+    }
+
+    @Override
+    public int getPlayer1() {
+        return this.player1;
+    }
+
+    @Override
+    public void setPlayer1(int num) {
+        this.player1 = num;
+    }
+
+    @Override
+    public int getPlayer2() {
+        return this.player2;
+    }
+
+    @Override
+    public void setPlayer2(int num) {
+        this.player2 = num;
     }
 }

@@ -11,7 +11,7 @@ public class GameFrame extends JFrame {
         this.add(gamePanel);
         this.setTitle("Ice Hockey Game");
         this.setResizable(false);
-        this.setBackground(Color.CYAN);
+        this.setBackground(Color.BLACK);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);

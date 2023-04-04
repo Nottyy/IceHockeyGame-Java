@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Ball ball;
 
     public GamePanel() {
+        this.random = new Random();
         this.newPaddles();
         this.newBall();
         this.score = new Score(GAME_WIDTH, GAME_HEIGHT);
@@ -35,11 +36,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(this.DIMENSION_SIZE);
         this.thread = new Thread(this);
         this.thread.start();
-        this.random = new Random();
     }
 
     public void newBall() {
-        this.ball = new Ball(GAME_WIDTH / 2 - BALL_WIDTH, 0, BALL_WIDTH, BALL_WIDTH);
+        int rand = this.random.nextInt(GAME_HEIGHT - BALL_WIDTH);
+        this.ball = new Ball(GAME_WIDTH / 2 - BALL_WIDTH, rand, BALL_WIDTH, BALL_WIDTH);
     }
 
     public void newPaddles() {
@@ -60,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.paddle1.draw(g);
         this.paddle2.draw(g);
         this.ball.draw(g);
+        this.score.draw(g);
     }
 
     public void move() {
@@ -111,6 +113,19 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (this.ball.y >= GAME_HEIGHT - BALL_WIDTH) {
             this.ball.changeYDirection();
+        }
+
+        //gives one point and creates new paddles
+        if (this.ball.x <= 0){
+            this.score.player2++;
+            this.newPaddles();
+            this.newBall();
+        }
+
+        if (this.ball.x >= GAME_WIDTH){
+            this.score.player1++;
+            this.newPaddles();
+            this.newBall();
         }
     }
 

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameFrame extends JFrame {
-    private GamePanel gamePanel;
+    public GamePanel gamePanel;
 
     public GameFrame() {
         this.gamePanel = new GamePanel();

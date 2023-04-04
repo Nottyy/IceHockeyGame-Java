@@ -78,15 +78,16 @@ public class GamePanel extends JPanel implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             if (delta >= 1) {
-//                move();
-//                checkCollision();
-//                repaint();
+                //move();
+                //checkCollision();
+                this.repaint();
                 delta--;
             }
         }
     }
 
     public class AL extends KeyAdapter {
+
         public void keyPressed(KeyEvent e) {
             paddle1.keyPressed(e);
             paddle2.keyPressed(e);

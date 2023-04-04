@@ -49,11 +49,11 @@ public class Paddle extends Rectangle {
 
 
     public void setYDirection(int yDirection) {
-
+        this.yVelocity = yDirection;
     }
 
     public void move() {
-
+        this.y = this.y + this.yVelocity;
     }
 
     public void draw(Graphics g) {

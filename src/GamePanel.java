@@ -14,6 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
     private static final int DIAMETER = 20;
     private static final int PADDLE_WIDTH = 25;
     private static final int PADDLE_HEIGHT = 100;
+    private static final int BALL_WIDTH = 15;
 
     private Thread thread;
     private Image image;
@@ -34,10 +35,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(this.DIMENSION_SIZE);
         this.thread = new Thread(this);
         this.thread.start();
+        this.random = new Random();
     }
 
     public void newBall() {
-
+        this.ball = new Ball(GAME_WIDTH / 2 - BALL_WIDTH, 0, BALL_WIDTH, BALL_WIDTH);
     }
 
     public void newPaddles() {
@@ -57,14 +59,59 @@ public class GamePanel extends JPanel implements Runnable {
     public void draw(Graphics g) {
         this.paddle1.draw(g);
         this.paddle2.draw(g);
+        this.ball.draw(g);
     }
 
     public void move() {
-
+        this.paddle1.move();
+        this.paddle2.move();
+        this.ball.move();
     }
 
     public void checkCollision() {
+        // check if paddles move outside window edges
+        if (this.paddle1.y <= 0) {
+            this.paddle1.y = 0;
+        }
 
+        if (this.paddle1.y >= GAME_HEIGHT - PADDLE_HEIGHT) {
+            this.paddle1.y = GAME_HEIGHT - PADDLE_HEIGHT;
+        }
+
+        if (this.paddle2.y <= 0) {
+            this.paddle2.y = 0;
+        }
+
+        if (this.paddle2.y >= GAME_HEIGHT - PADDLE_HEIGHT) {
+            this.paddle2.y = GAME_HEIGHT - PADDLE_HEIGHT;
+        }
+
+        // changes ball direction if there is a collision with paddles
+        if (this.ball.intersects(this.paddle1) || this.ball.intersects(this.paddle2)) {
+            this.ball.changeXDirection();
+
+            int xVelocity = this.ball.getXVelocity();
+            if (xVelocity > 0) {
+                this.ball.setXVelocity(xVelocity + random.nextInt(2));
+            } else {
+                this.ball.setXVelocity(xVelocity - random.nextInt(2));
+            }
+
+            int yVelocity = this.ball.getYVelocity();
+            if (yVelocity > 0){
+                this.ball.setYVelocity(yVelocity + random.nextInt(2));
+            }else{
+                this.ball.setYVelocity(yVelocity - random.nextInt(2));
+            }
+        }
+
+        if (this.ball.y <= 0) {
+            this.ball.changeYDirection();
+        }
+
+        if (this.ball.y >= GAME_HEIGHT - BALL_WIDTH) {
+            this.ball.changeYDirection();
+        }
     }
 
     public void run() {
@@ -78,8 +125,8 @@ public class GamePanel extends JPanel implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             if (delta >= 1) {
-                //move();
-                //checkCollision();
+                move();
+                checkCollision();
                 this.repaint();
                 delta--;
             }

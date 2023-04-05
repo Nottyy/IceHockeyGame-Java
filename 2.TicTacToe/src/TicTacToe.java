@@ -22,12 +22,18 @@ public class TicTacToe implements ActionListener {
         this.buttons = new JButton[9];
 
         FrameSettings();
-
         TextFieldSettings();
-
         TitlePanelSettings();
+        ButtonSettings();
 
 
+        this.frame.add(this.title_panel, BorderLayout.NORTH);
+        this.frame.add(this.button_panel);
+
+        this.firstTurn();
+    }
+
+    private void ButtonSettings() {
         this.button_panel.setLayout(new GridLayout(3,3));
         this.button_panel.setBackground(new Color(150,0,150));
 
@@ -42,12 +48,6 @@ public class TicTacToe implements ActionListener {
 
             this.button_panel.add(this.buttons[i]);
         }
-
-
-        this.frame.add(this.title_panel, BorderLayout.NORTH);
-        this.frame.add(this.button_panel);
-
-        this.firstTurn();
     }
 
     private void TitlePanelSettings() {

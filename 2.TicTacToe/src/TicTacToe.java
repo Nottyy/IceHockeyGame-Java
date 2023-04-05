@@ -21,11 +21,7 @@ public class TicTacToe implements ActionListener {
         this.text_field = new JLabel();
         this.buttons = new JButton[9];
 
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(800, 800);
-        this.frame.setBackground(new Color(50, 50, 50));
-        this.frame.setLayout(new BorderLayout());
-        this.frame.setVisible(true);
+        FrameSettings();
 
         this.text_field.setBackground(new Color(25,25,25));
         this.text_field.setForeground(new Color(25,255,0));
@@ -35,16 +31,61 @@ public class TicTacToe implements ActionListener {
         this.text_field.setOpaque(true);
 
         this.title_panel.setLayout(new BorderLayout());
+        this.title_panel.setBounds(0,0,800,100);
 
+        this.button_panel.setLayout(new GridLayout(3,3));
+        this.button_panel.setBackground(new Color(150,0,150));
+
+        for (int i = 0; i < 9; i++){
+            this.buttons[i] = new JButton();
+
+            this.buttons[i].setFont(new Font("Calibre", Font.BOLD, 120));
+            this.buttons[i].setFocusable(false);
+            this.buttons[i].setBackground(Color.ORANGE);
+
+            this.buttons[i].addActionListener(this);
+
+            this.button_panel.add(this.buttons[i]);
+        }
+
+        this.title_panel.add(this.text_field);
+
+        this.frame.add(this.title_panel, BorderLayout.NORTH);
+        this.frame.add(this.button_panel);
+
+        this.firstTurn();
+    }
+
+    private void FrameSettings() {
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setSize(800, 800);
+        this.frame.setBackground(new Color(50, 50, 50));
+        this.frame.setLayout(new BorderLayout());
+        this.frame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
+
     }
 
     public void firstTurn() {
+        try{
+            Thread.sleep(3000);
+        }
+        catch (Exception ex){
 
+        }
+
+        if (this.rnd.nextInt(2) == 0){
+            this.player1Turn = true;
+            this.text_field.setText("X turn");
+        }
+        else{
+            this.player1Turn = false;
+            this.text_field.setText("Y turn");
+        }
     }
 
     public void checkWinningConditions() {

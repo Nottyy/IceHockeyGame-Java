@@ -26,7 +26,6 @@ public class TicTacToe implements ActionListener {
         TitlePanelSettings();
         ButtonSettings();
 
-
         this.frame.add(this.title_panel, BorderLayout.NORTH);
         this.frame.add(this.button_panel);
 
@@ -34,15 +33,14 @@ public class TicTacToe implements ActionListener {
     }
 
     private void ButtonSettings() {
-        this.button_panel.setLayout(new GridLayout(3,3));
-        this.button_panel.setBackground(new Color(150,0,150));
+        this.button_panel.setLayout(new GridLayout(3, 3));
 
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i < 9; i++) {
             this.buttons[i] = new JButton();
 
             this.buttons[i].setFont(new Font("Calibre", Font.BOLD, 120));
             this.buttons[i].setFocusable(false);
-            this.buttons[i].setBackground(Color.ORANGE);
+            //this.buttons[i].setBackground(Color.ORANGE);
 
             this.buttons[i].addActionListener(this);
 
@@ -52,13 +50,13 @@ public class TicTacToe implements ActionListener {
 
     private void TitlePanelSettings() {
         this.title_panel.setLayout(new BorderLayout());
-        this.title_panel.setBounds(0,0,800,100);
+        this.title_panel.setBounds(0, 0, 800, 100);
         this.title_panel.add(this.text_field);
     }
 
     private void TextFieldSettings() {
-        this.text_field.setBackground(new Color(25,25,25));
-        this.text_field.setForeground(new Color(25,255,0));
+        this.text_field.setBackground(new Color(25, 25, 25));
+        this.text_field.setForeground(new Color(25, 255, 0));
         this.text_field.setFont(new Font("Ink Free", Font.BOLD, 75));
         this.text_field.setHorizontalAlignment(JLabel.CENTER);
         this.text_field.setText("Tic-Tac-Toe");
@@ -75,37 +73,97 @@ public class TicTacToe implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        for (int i = 0; i < 9; i++) {
+            if (e.getSource() == buttons[i]) {
+                if (this.player1Turn) {
+                    if (this.buttons[i].getText() == "") {
+                        this.buttons[i].setForeground(new Color(255, 0, 0));
+                        this.buttons[i].setText("X");
+                        this.player1Turn = false;
+                        this.text_field.setText("O turn");
+                        this.checkWinningConditions();
+                    }
+                } else {
+                    if (this.buttons[i].getText() == "") {
 
-
+                        this.buttons[i].setForeground(new Color(0, 0, 255));
+                        this.buttons[i].setText("O");
+                        this.player1Turn = true;
+                        this.text_field.setText("X turn");
+                        this.checkWinningConditions();
+                    }
+                }
+            }
+        }
     }
 
     public void firstTurn() {
-        try{
-            Thread.sleep(3000);
-        }
-        catch (Exception ex){
+        this.Sleep(3000);
 
-        }
-
-        if (this.rnd.nextInt(2) == 0){
+        if (this.rnd.nextInt(2) == 0) {
             this.player1Turn = true;
             this.text_field.setText("X turn");
-        }
-        else{
+        } else {
             this.player1Turn = false;
-            this.text_field.setText("Y turn");
+            this.text_field.setText("O turn");
+        }
+    }
+
+    private void Sleep(int i) {
+        try {
+            Thread.sleep(i);
+        } catch (Exception ex) {
+
         }
     }
 
     public void checkWinningConditions() {
+        //check rows
+        for (int i = 0; i < 9; i += 3) {
+            String str = this.buttons[i].getText();
+            if (str == "") {
+                continue;
+            }
+            boolean allMatching = true;
+            for (int j = 1; j < 3; j++) {
+                if (str != buttons[i + j].getText()) {
+                    allMatching = false;
+                    break;
+                }
+            }
 
+            if (allMatching) {
+                if (str == "O") {
+                    this.oWins(i, i + 1, i + 2);
+                } else {
+                    this.xWins(i, i + 1, i + 2);
+                }
+
+            }
+        }
     }
 
     public void xWins(int a, int b, int c) {
+        this.buttons[a].setBackground(Color.GREEN);
+        this.buttons[b].setBackground(Color.GREEN);
+        this.buttons[c].setBackground(Color.GREEN);
 
+        for (int i = 0; i < 9; i++) {
+            buttons[i].setEnabled(false);
+        }
+
+        this.text_field.setText("X Wins");
     }
 
     public void oWins(int a, int b, int c) {
+        this.buttons[a].setBackground(Color.GREEN);
+        this.buttons[b].setBackground(Color.GREEN);
+        this.buttons[c].setBackground(Color.GREEN);
 
+        for (int i = 0; i < 9; i++) {
+            buttons[i].setEnabled(false);
+        }
+
+        this.text_field.setText("O Wins");
     }
 }

@@ -23,12 +23,7 @@ public class TicTacToe implements ActionListener {
 
         FrameSettings();
 
-        this.text_field.setBackground(new Color(25,25,25));
-        this.text_field.setForeground(new Color(25,255,0));
-        this.text_field.setFont(new Font("Ink Free", Font.BOLD, 75));
-        this.text_field.setHorizontalAlignment(JLabel.CENTER);
-        this.text_field.setText("Tic-Tac-Toe");
-        this.text_field.setOpaque(true);
+        TextFieldSettings();
 
         this.title_panel.setLayout(new BorderLayout());
         this.title_panel.setBounds(0,0,800,100);
@@ -54,6 +49,15 @@ public class TicTacToe implements ActionListener {
         this.frame.add(this.button_panel);
 
         this.firstTurn();
+    }
+
+    private void TextFieldSettings() {
+        this.text_field.setBackground(new Color(25,25,25));
+        this.text_field.setForeground(new Color(25,255,0));
+        this.text_field.setFont(new Font("Ink Free", Font.BOLD, 75));
+        this.text_field.setHorizontalAlignment(JLabel.CENTER);
+        this.text_field.setText("Tic-Tac-Toe");
+        this.text_field.setOpaque(true);
     }
 
     private void FrameSettings() {

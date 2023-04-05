@@ -97,7 +97,7 @@ public class TicTacToe implements ActionListener {
     }
 
     public void firstTurn() {
-        this.Sleep(2000);
+        this.Sleep(4000);
 
         if (this.rnd.nextInt(2) == 0) {
             this.player1Turn = true;

@@ -40,7 +40,6 @@ public class TicTacToe implements ActionListener {
 
             this.buttons[i].setFont(new Font("Calibre", Font.BOLD, 120));
             this.buttons[i].setFocusable(false);
-            //this.buttons[i].setBackground(Color.ORANGE);
 
             this.buttons[i].addActionListener(this);
 
@@ -98,7 +97,7 @@ public class TicTacToe implements ActionListener {
     }
 
     public void firstTurn() {
-        this.Sleep(3000);
+        this.Sleep(2000);
 
         if (this.rnd.nextInt(2) == 0) {
             this.player1Turn = true;
@@ -118,7 +117,66 @@ public class TicTacToe implements ActionListener {
     }
 
     public void checkWinningConditions() {
-        //check rows
+        CheckRows();
+        CheckCols();
+        CheckDiagonals();
+    }
+
+    private void CheckDiagonals() {
+        if (this.buttons[0].getText() == "O"
+                && this.buttons[4].getText() == "O"
+                && this.buttons[8].getText() == "O"){
+            this.oWins(0,4,8);
+            return;
+        }
+
+        if (this.buttons[0].getText() == "X"
+                && this.buttons[4].getText() == "X"
+                && this.buttons[8].getText() == "X"){
+            this.xWins(0,4,8);
+            return;
+        }
+
+        if (this.buttons[2].getText() == "O"
+                && this.buttons[4].getText() == "O"
+                && this.buttons[6].getText() == "O"){
+            this.oWins(2,4,6);
+            return;
+        }
+
+        if (this.buttons[2].getText() == "X"
+                && this.buttons[4].getText() == "X"
+                && this.buttons[6].getText() == "X"){
+            this.xWins(2,4,6);
+            return;
+        }
+    }
+
+    private void CheckCols() {
+        for (int i = 0; i < 3; i++) {
+            String str = this.buttons[i].getText();
+            if (str == "") {
+                continue;
+            }
+            boolean allMatching = true;
+            for (int j = 3; j < 9; j+=3) {
+                if (str != buttons[i + j].getText()) {
+                    allMatching = false;
+                    break;
+                }
+            }
+
+            if (allMatching) {
+                if (str == "O") {
+                    this.oWins(i, i + 3, i + 6);
+                } else {
+                    this.xWins(i, i + 3, i + 6);
+                }
+            }
+        }
+    }
+
+    private void CheckRows() {
         for (int i = 0; i < 9; i += 3) {
             String str = this.buttons[i].getText();
             if (str == "") {
@@ -138,32 +196,33 @@ public class TicTacToe implements ActionListener {
                 } else {
                     this.xWins(i, i + 1, i + 2);
                 }
-
             }
         }
     }
 
     public void xWins(int a, int b, int c) {
-        this.buttons[a].setBackground(Color.GREEN);
-        this.buttons[b].setBackground(Color.GREEN);
-        this.buttons[c].setBackground(Color.GREEN);
-
-        for (int i = 0; i < 9; i++) {
-            buttons[i].setEnabled(false);
-        }
+        MakeButtonsGreen(a, b, c);
+        DisableButtons();
 
         this.text_field.setText("X Wins");
     }
 
     public void oWins(int a, int b, int c) {
+        MakeButtonsGreen(a, b, c);
+        DisableButtons();
+
+        this.text_field.setText("O Wins");
+    }
+
+    private void MakeButtonsGreen(int a, int b, int c) {
         this.buttons[a].setBackground(Color.GREEN);
         this.buttons[b].setBackground(Color.GREEN);
         this.buttons[c].setBackground(Color.GREEN);
+    }
 
+    private void DisableButtons() {
         for (int i = 0; i < 9; i++) {
             buttons[i].setEnabled(false);
         }
-
-        this.text_field.setText("O Wins");
     }
 }

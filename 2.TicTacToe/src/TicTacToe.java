@@ -25,8 +25,8 @@ public class TicTacToe implements ActionListener {
 
         TextFieldSettings();
 
-        this.title_panel.setLayout(new BorderLayout());
-        this.title_panel.setBounds(0,0,800,100);
+        TitlePanelSettings();
+
 
         this.button_panel.setLayout(new GridLayout(3,3));
         this.button_panel.setBackground(new Color(150,0,150));
@@ -43,12 +43,17 @@ public class TicTacToe implements ActionListener {
             this.button_panel.add(this.buttons[i]);
         }
 
-        this.title_panel.add(this.text_field);
 
         this.frame.add(this.title_panel, BorderLayout.NORTH);
         this.frame.add(this.button_panel);
 
         this.firstTurn();
+    }
+
+    private void TitlePanelSettings() {
+        this.title_panel.setLayout(new BorderLayout());
+        this.title_panel.setBounds(0,0,800,100);
+        this.title_panel.add(this.text_field);
     }
 
     private void TextFieldSettings() {

@@ -28,6 +28,9 @@ public class Controller implements ActionListener {
         this.player1 = new Player(Color.BLUE);
         this.player2 = new Player(Color.RED);
 
+        this.buttonImpl.getScoreButton().addActionListener(this);
+        this.settings.getTitlePanel().add(this.buttonImpl.getScoreButton());
+
         this.initializeButtons();
         this.firstTurn();
     }

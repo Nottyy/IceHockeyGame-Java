@@ -1,10 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Random;
 
 public class SettingsImpl {
 
@@ -40,6 +36,10 @@ public class SettingsImpl {
         return cols;
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
+
     public JPanel getTitlePanel() {
         return titlePanel;
     }
@@ -58,7 +58,6 @@ public class SettingsImpl {
         this.textFields[0] = new JLabel();
         this.titlePanel.add(this.TextFieldSettings(this.textFields[0], Font.BOLD, 30, "Score BLUE: 0", Color.BLUE));
 
-        this.titlePanel.add(this.scoreButton);
 
         this.textFields[1] = new JLabel();
         this.titlePanel.add(this.TextFieldSettings(this.textFields[1], Font.BOLD, 30, "Score RED: 0", Color.RED));
@@ -84,7 +83,7 @@ public class SettingsImpl {
     }
 
     private void ButtonSettings() {
-        this.buttonPanel.setLayout(new GridLayout(rows, cols));
+        this.buttonPanel.setLayout(new GridLayout(this.rows, this.cols));
         this.buttonPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
         this.buttonPanel.setBackground(Color.lightGray);
     }

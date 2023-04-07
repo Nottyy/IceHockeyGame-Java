@@ -11,36 +11,27 @@ public class ButtonImpl {
     private JButton[] buttons;
     private JButton scoreButton;
     private Boolean[][] buttonSides;
-    private JPanel buttonPanel;
 
 
     public ButtonImpl(){
-        this.buttonPanel = new JPanel();
         this.buttons = new JButton[GRID_ROWS * GRID_COLS];
         this.scoreButton = new JButton();
         this.buttonSides = new Boolean[GRID_ROWS * GRID_COLS][4];
         for (Boolean[] arr : this.buttonSides) {
             Arrays.fill(arr, false);
         }
-
-        this.ButtonSettings();
     }
 
-    private void ButtonSettings() {
-        this.buttonPanel.setLayout(new GridLayout(GRID_ROWS, GRID_COLS));
+    public JButton[] getButtons() {
+        return buttons;
+    }
 
-        for (int i = 0; i < this.buttons.length; i++) {
-            this.buttons[i] = new JButton();
-            this.buttons[i].setBorder(BorderFactory.createDashedBorder(null, 4, 4));
+    public JButton getScoreButton() {
+        return scoreButton;
+    }
 
-            this.buttons[i].setFocusable(false);
-            this.buttons[i].setFont(new Font("Calibre", Font.BOLD, 120));
-            this.buttons[i].addActionListener(this);
-            this.buttonPanel.add(buttons[i]);
-        }
-
-        this.buttonPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
-        this.buttonPanel.setBackground(Color.lightGray);
+    public Boolean[][] getButtonSides() {
+        return buttonSides;
     }
 
     private void ScoreButtonSettings(){

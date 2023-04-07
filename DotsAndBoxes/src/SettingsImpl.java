@@ -1,72 +1,41 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 
-public class DotsAndBoxes implements ActionListener {
-    private static final int GRID_ROWS = 6;
-    private static final int GRID_COLS = 6;
+public class SettingsImpl implements ActionListener {
+
     private Random rnd;
     private JFrame frame;
     private JPanel titlePanel;
-    private JPanel buttonPanel;
     private JLabel[] textFields;
-    private JButton[] buttons;
-    private JButton scoreButton;
-    private Boolean[][] buttonSides;
     private boolean player1Turn;
     private boolean madeAMove;
-    private int player1Score;
-    private int player2Score;
+
     private int idLastButton = -1;
     private int idLastButtonN = -1;
     private int lastSide = -1;
     private int lastSideN = -1;
 
-    public DotsAndBoxes() {
+    public SettingsImpl() {
         this.rnd = new Random();
         this.frame = new JFrame();
         this.titlePanel = new JPanel();
-        this.buttonPanel = new JPanel();
         this.textFields = new JLabel[2];
-        this.buttons = new JButton[GRID_ROWS * GRID_COLS];
-        this.scoreButton = new JButton();
         this.player1Score = 0;
         this.player2Score = 0;
         this.madeAMove = false;
-        this.buttonSides = new Boolean[GRID_ROWS * GRID_COLS][4];
-        for (Boolean[] arr : this.buttonSides) {
-            Arrays.fill(arr, false);
-        }
+
 
         this.JFrameSettings();
         this.TitlePanelSettings();
-        this.ButtonSettings();
 
         this.frame.add(this.titlePanel, BorderLayout.NORTH);
         this.frame.add(this.buttonPanel);
 
         this.firstTurn();
-    }
-
-    private void ButtonSettings() {
-        this.buttonPanel.setLayout(new GridLayout(GRID_ROWS, GRID_COLS));
-
-        for (int i = 0; i < this.buttons.length; i++) {
-            this.buttons[i] = new JButton();
-            this.buttons[i].setBorder(BorderFactory.createDashedBorder(null, 4, 4));
-
-            this.buttons[i].setFocusable(false);
-            this.buttons[i].setFont(new Font("Calibre", Font.BOLD, 120));
-            this.buttons[i].addActionListener(this);
-            this.buttonPanel.add(buttons[i]);
-        }
-
-        this.buttonPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
-        this.buttonPanel.setBackground(Color.lightGray);
     }
 
     private void TitlePanelSettings() {
@@ -75,11 +44,6 @@ public class DotsAndBoxes implements ActionListener {
         this.textFields[0] = new JLabel();
         this.titlePanel.add(this.TextFieldSettings(this.textFields[0], Font.BOLD, 30, "Score BLUE: 0", Color.BLUE));
 
-        this.scoreButton.setFocusable(false);
-        this.scoreButton.setForeground(Color.white);
-        this.scoreButton.setText("NEXT TURN");
-        this.scoreButton.setFont(new Font("Calibre", Font.BOLD, 30));
-        this.scoreButton.addActionListener(this);
         this.titlePanel.add(this.scoreButton);
 
         this.textFields[1] = new JLabel();
@@ -115,20 +79,20 @@ public class DotsAndBoxes implements ActionListener {
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.scoreButton) {
             NextTurn();
         } else {
             for (int i = 0; i < this.buttons.length; i++) {
-                if (buttons[i] == e.getSource()) {
+                if (this.buttons[i] == e.getSource()) {
                     long count = Arrays.stream(buttonSides[i]).filter(x -> x).count();
 
                     if (count == 3) {
-                        // update player score, color button, setBorder, disablebutton
+                        WonPoint(i);
+
                     } else if (count < 3) {
-                        ChangeButtonSide(i);
+                        ModifyButton(i);
                     }
                     break;
                 }
@@ -136,59 +100,99 @@ public class DotsAndBoxes implements ActionListener {
         }
     }
 
-    private void ChangeButtonSide(int i) {
-        int sideToSet = -1;
+    private void WonPoint(int i) {
+        //set background
+        this.buttons[i].setBackground(this.player1Turn ? Color.BLUE : Color.RED);
+
+        //update player score
+        if (this.player1Turn) {
+            this.player1Score++;
+            this.textFields[0].setText(String.format("Score BLUE: %d", this.player1Score));
+        } else {
+            this.player2Score++;
+            this.textFields[1].setText(String.format("Score RED: %d", this.player2Score));
+        }
+
+        //setBorder
+        int j;
+        for (j = 0; j < this.buttonSides[i].length; j++) {
+            if (!buttonSides[i][j]) {
+                break;
+            }
+        }
+        ClearLastClickedButton();
+
+        UpdateButtonSide(j, i);
+        ModifyNeighbourButton(i, j);
+        if (this.idLastButtonN != -1) {
+            this.buttonSides[this.idLastButtonN][this.lastSideN] = true;
+        }
+
+        //disable button
+        this.buttons[i].setEnabled(false);
+
+        if (this.idLastButtonN != -1) {
+            if (Arrays.stream(this.buttonSides[this.idLastButtonN]).filter(x -> x).count() >= 3) {
+                WonPoint(this.idLastButtonN);
+            }
+        }
+    }
+
+    private void ModifyButton(int i) {
+        int sideToModify = -1;
 
         if (i == this.idLastButton) {
             for (int j = 1; j < this.buttonSides[i].length; j++) {
-                sideToSet = (j + this.lastSide) % 4;
-                if (!buttonSides[i][sideToSet]) {
+                sideToModify = (j + this.lastSide) % 4;
+                if (!buttonSides[i][sideToModify]) {
                     break;
                 }
             }
         } else if (i != this.idLastButton) {
             for (int j = 0; j < 4; j++) {
                 if (!this.buttonSides[i][j]) {
-                    sideToSet = j;
+                    sideToModify = j;
                     break;
                 }
             }
         }
 
-        // clear lastClicked button and its neighbour
+        // clear lastClicked button
+        ClearLastClickedButton();
+
+        //set the border of the clicked button
+        var arr = this.buttonSides[i].clone();
+        arr[sideToModify] = true;
+        this.SetBorders(i, arr);
+
+        //set the border of the neighbour button
+        ModifyNeighbourButton(i, sideToModify);
+
+        this.idLastButton = i;
+        this.lastSide = sideToModify;
+        this.madeAMove = true;
+    }
+
+    private void ClearLastClickedButton() {
         if (this.lastSide != -1) {
             var arr = this.buttonSides[this.idLastButton].clone();
             this.SetBorders(this.idLastButton, arr);
 
-            if (this.lastSideN != -1){
+            // clear neighbour of lastClicked button
+            if (this.lastSideN != -1) {
                 arr = this.buttonSides[this.idLastButtonN].clone();
                 this.SetBorders(this.idLastButtonN, arr);
             }
         }
-
-        //set the border of the clicked button
-        var arr = this.buttonSides[i].clone();
-        arr[sideToSet] = true;
-        this.SetBorders(i, arr);
-
-        //set the border of the neighbour button
-        SetNeighbourButton(i, sideToSet);
-
-        this.idLastButton = i;
-        this.lastSide = sideToSet;
-        this.madeAMove = true;
     }
 
-    private void SetNeighbourButton(int i, int sideToSet) {
-        Boolean[] arr;
+    private void ModifyNeighbourButton(int i, int sideToModify) {
 
-        switch (sideToSet) {
+        switch (sideToModify) {
             case 0:
                 this.idLastButtonN = i - GRID_COLS;
-                if (this.idLastButtonN > 0) {
-                    arr = this.buttonSides[this.idLastButtonN].clone();
-                    arr[2] = true;
-                    this.SetBorders(this.idLastButtonN, arr);
+                if (this.idLastButtonN >= 0) {
+                    UpdateButtonSide(2, this.idLastButtonN);
                     this.lastSideN = 2;
                 } else {
                     this.idLastButtonN = -1;
@@ -197,10 +201,8 @@ public class DotsAndBoxes implements ActionListener {
                 break;
             case 1:
                 this.idLastButtonN = i - 1;
-                if (this.idLastButtonN > 0 && this.idLastButtonN % (GRID_COLS - 1) != 0) {
-                    arr = this.buttonSides[this.idLastButtonN].clone();
-                    arr[3] = true;
-                    this.SetBorders(this.idLastButtonN, arr);
+                if (this.idLastButtonN >= 0 && this.idLastButtonN > (GRID_COLS * (i / GRID_COLS)) - 1) {
+                    UpdateButtonSide(3, this.idLastButtonN);
                     this.lastSideN = 3;
                 } else {
                     this.idLastButtonN = -1;
@@ -210,9 +212,7 @@ public class DotsAndBoxes implements ActionListener {
             case 2:
                 this.idLastButtonN = i + GRID_COLS;
                 if (this.idLastButtonN < GRID_COLS * GRID_ROWS) {
-                    arr = this.buttonSides[this.idLastButtonN].clone();
-                    arr[0] = true;
-                    this.SetBorders(this.idLastButtonN, arr);
+                    UpdateButtonSide(0, this.idLastButtonN);
                     this.lastSideN = 0;
                 } else {
                     this.idLastButtonN = -1;
@@ -222,9 +222,7 @@ public class DotsAndBoxes implements ActionListener {
             case 3:
                 this.idLastButtonN = i + 1;
                 if (this.idLastButtonN % GRID_COLS != 0) {
-                    arr = this.buttonSides[this.idLastButtonN].clone();
-                    arr[1] = true;
-                    this.SetBorders(this.idLastButtonN, arr);
+                    UpdateButtonSide(1, this.idLastButtonN);
                     this.lastSideN = 1;
                 } else {
                     this.idLastButtonN = -1;
@@ -232,6 +230,18 @@ public class DotsAndBoxes implements ActionListener {
                 }
                 break;
         }
+
+        if (this.idLastButtonN != -1) {
+            if (Arrays.stream(this.buttonSides[this.idLastButtonN]).filter(x -> x).count() >= 3) {
+                WonPoint(this.idLastButtonN);
+            }
+        }
+    }
+
+    private void UpdateButtonSide(int side, int idButton) {
+        Boolean[] arr = this.buttonSides[idButton].clone();
+        arr[side] = true;
+        this.SetBorders(idButton, arr);
     }
 
     private void SetBorders(int i, Boolean[] values) {
@@ -240,7 +250,6 @@ public class DotsAndBoxes implements ActionListener {
                 values[1] == true ? 4 : 0,
                 values[2] == true ? 4 : 0,
                 values[3] == true ? 4 : 0, Color.BLACK));
-
     }
 
     private void NextTurn() {
@@ -262,5 +271,4 @@ public class DotsAndBoxes implements ActionListener {
     }
 
     // this.buttons[i].setBorder(BorderFactory.createMatteBorder(0, 4, 0, 0, Color.RED));
-    //String.format("Score BLUE: %d", this.player1Score)
 }

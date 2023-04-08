@@ -8,5 +8,6 @@
 
 3. Dots and Boxes Game
 ![scr1](https://user-images.githubusercontent.com/6088134/230712179-90b8e996-54b8-413f-8b27-ed23620aa8e0.png)
-![scr2](https://user-images.githubusercontent.com/6088134/230712187-573919ac-26e0-4c4a-869d-751a9d9bd186.png)
+![scr2](https://user-images.githubusercontent.com/6088134/230712637-2f7e922b-aa5d-4356-a07a-a916103c89f7.png)
+
 

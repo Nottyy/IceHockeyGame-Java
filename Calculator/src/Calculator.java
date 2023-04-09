@@ -10,11 +10,9 @@ public class Calculator implements ActionListener {
     private JButton[] numberButtons;
     private JButton[] functionButtons;
     private JButton addB, subB, divB, multB;
-    private JButton decB, equB, clrB, delB;
+    private JButton decB, equB, clrB, delB, negB;
     private JPanel panel;
-
     private Font myFont = new Font("Ink free", Font.BOLD, 30);
-
     private double num1 = 0;
     private double num2 = 0;
     private double result = 0;
@@ -25,7 +23,7 @@ public class Calculator implements ActionListener {
     public Calculator() {
         this.frame = new JFrame("Calculator");
         this.numberButtons = new JButton[10];
-        this.functionButtons = new JButton[8];
+        this.functionButtons = new JButton[9];
         this.panel = new JPanel(new GridLayout(4, 4, 10, 10));
 
         FrameSettings();
@@ -35,6 +33,7 @@ public class Calculator implements ActionListener {
 
         this.frame.add(this.panel);
         this.frame.add(this.textField);
+        this.frame.add(this.negB);
         this.frame.add(this.delB);
         this.frame.add(this.clrB);
 
@@ -84,8 +83,9 @@ public class Calculator implements ActionListener {
         this.divB = new JButton("/");
         this.decB = new JButton(".");
         this.equB = new JButton("=");
-        this.delB = new JButton("Delete");
-        this.clrB = new JButton("Clear");
+        this.delB = new JButton("Del.");
+        this.clrB = new JButton("C");
+        this.negB = new JButton("(-)");
 
         this.functionButtons[0] = this.addB;
         this.functionButtons[1] = this.subB;
@@ -95,6 +95,7 @@ public class Calculator implements ActionListener {
         this.functionButtons[5] = this.equB;
         this.functionButtons[6] = this.delB;
         this.functionButtons[7] = this.clrB;
+        this.functionButtons[8] = this.negB;
 
         for (int i = 0; i < this.functionButtons.length; i++) {
             this.functionButtons[i].addActionListener(this);
@@ -107,56 +108,63 @@ public class Calculator implements ActionListener {
             this.numberButtons[i].addActionListener(this);
             this.numberButtons[i].setFont(this.myFont);
         }
-
-        this.delB.setBounds(50, 430, 145, 50);
-        this.clrB.setBounds(205, 430, 145, 50);
+        this.negB.setBounds(50, 430, 100, 50);
+        this.delB.setBounds(150, 430, 100, 50);
+        this.clrB.setBounds(250, 430, 100, 50);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       for (int i = 0; i < this.numberButtons.length;i++){
-           if (e.getSource() == this.numberButtons[i]){
-               this.textField.setText(this.textField.getText().concat(String.valueOf(i)));
-           }
-       }
-
-       if (e.getSource() == this.addB){
-           this.num1 = Double.parseDouble(this.textField.getText());
-           this.textField.setText("");
-           this.operator = '+';
-       }
-
-       if (e.getSource() == this.subB){
-           this.num1 = Double.parseDouble(this.textField.getText());
-           this.textField.setText("");
-           this.operator = '-';
-       }
-
-        if (e.getSource() == this.multB){
-            this.num1 = Double.parseDouble(this.textField.getText());
-            this.textField.setText("");
-            this.operator = '*';
-        }
-
-        if (e.getSource() == this.divB){
-            this.num1 = Double.parseDouble(this.textField.getText());
-            this.textField.setText("");
-            this.operator = '/';
-        }
-
-        if (e.getSource() == this.decB){
-            if (this.textField.getText().isEmpty() || this.textField.getText() == null){
-                this.textField.setText(this.textField.getText().concat(String.valueOf("0.")));
+        for (int i = 0; i < this.numberButtons.length; i++) {
+            if (e.getSource() == this.numberButtons[i]) {
+                this.textField.setText(this.textField.getText().concat(String.valueOf(i)));
             }
-            else{
+        }
+
+        if (e.getSource() == this.addB) {
+            if (!EmptyTextField(this.textField)) {
+                this.num1 = Double.parseDouble(this.textField.getText());
+                this.textField.setText("");
+                this.operator = '+';
+            }
+        }
+
+        if (e.getSource() == this.subB) {
+            if (!EmptyTextField(this.textField)) {
+                this.num1 = Double.parseDouble(this.textField.getText());
+                this.textField.setText("");
+                this.operator = '-';
+            }
+        }
+
+        if (e.getSource() == this.multB) {
+            if (!EmptyTextField(this.textField)) {
+                this.num1 = Double.parseDouble(this.textField.getText());
+                this.textField.setText("");
+                this.operator = '*';
+            }
+        }
+
+        if (e.getSource() == this.divB) {
+            if (!EmptyTextField(this.textField)) {
+                this.num1 = Double.parseDouble(this.textField.getText());
+                this.textField.setText("");
+                this.operator = '/';
+            }
+        }
+
+        if (e.getSource() == this.decB) {
+            if (this.textField.getText().isEmpty() || this.textField.getText() == null) {
+                this.textField.setText(this.textField.getText().concat(String.valueOf("0.")));
+            } else {
                 this.textField.setText(this.textField.getText().concat(String.valueOf('.')));
             }
         }
 
-        if (e.getSource() == this.equB){
-            this.num2 = Double.parseDouble(this.textField.getText());
+        if (e.getSource() == this.equB) {
+            this.num2 = this.textField.getText().isEmpty() ? (this.num1 == 0 ? 0 : num1) : Double.parseDouble(this.textField.getText());
 
-            switch (this.operator){
+            switch (this.operator) {
                 case '+':
                     this.result = num1 + num2;
                     break;
@@ -175,21 +183,30 @@ public class Calculator implements ActionListener {
             this.num1 = result;
         }
 
-        if (e.getSource() == this.clrB){
+        if (e.getSource() == this.clrB) {
             this.textField.setText("");
             this.num1 = 0;
             this.num2 = 0;
             this.result = 0;
         }
 
-        if (e.getSource() == this.delB){
-            String txt = this.textField.getText();
-            if(txt.isEmpty() == false || txt != null){
-                this.textField.setText(txt.substring(0, txt.length() - 1));
+        if (e.getSource() == this.delB) {
+            if (!EmptyTextField(this.textField)) {
+                this.textField.setText(this.textField.getText().substring(0, this.textField.getText().length() - 1));
+            }
+        }
+
+        if (e.getSource() == this.negB) {
+            if (!EmptyTextField(this.textField)) {
+                double oppNum = Double.parseDouble(this.textField.getText()) * -1;
+                this.textField.setText(String.valueOf(oppNum));
             }
         }
     }
 
+    private boolean EmptyTextField(JTextField textField) {
+        return textField.getText().isEmpty() == true || textField.getText() == null;
+    }
 
     private void Calculate(double num1, double num2, double result, char operator) {
     }

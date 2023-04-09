@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -27,73 +26,105 @@ public class Calculator implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < this.numberButtons.length; i++) {
-            if (e.getSource() == this.numberButtons[i]) {
-                this.textField.setText(this.textField.getText().concat(String.valueOf(i)));
+        for (int i = 0; i < this.settings.getNumberButtons().length; i++) {
+            if (e.getSource() == this.settings.getNumberButtons()[i]) {
+                this.settings.getTextField()
+                        .setText(this.settings.getTextField()
+                                .getText().concat(String.valueOf(i)));
             }
         }
 
-        if (e.getSource() == this.addB) {
-            if (!EmptyTextField(this.textField)) {
-                this.num1 = Double.parseDouble(this.textField.getText());
-                this.textField.setText("");
+        if (e.getSource() == this.settings.getAddB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                this.num1 = Double.parseDouble(this.settings.getTextField()
+                        .getText());
+                this.settings.getTextField()
+                        .setText("");
                 this.operator = '+';
             }
         }
 
-        if (e.getSource() == this.subB) {
-            if (!EmptyTextField(this.textField)) {
-                this.num1 = Double.parseDouble(this.textField.getText());
-                this.textField.setText("");
+        if (e.getSource() == this.settings.getSubB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                this.num1 = Double.parseDouble(this.settings.getTextField()
+                        .getText());
+                this.settings.getTextField()
+                        .setText("");
                 this.operator = '-';
             }
         }
 
-        if (e.getSource() == this.multB) {
-            if (!EmptyTextField(this.textField)) {
-                this.num1 = Double.parseDouble(this.textField.getText());
-                this.textField.setText("");
+        if (e.getSource() == this.settings.getMultB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                this.num1 = Double.parseDouble(this.settings.getTextField()
+                        .getText());
+                this.settings.getTextField()
+                        .setText("");
                 this.operator = '*';
             }
         }
 
-        if (e.getSource() == this.divB) {
-            if (!EmptyTextField(this.textField)) {
-                this.num1 = Double.parseDouble(this.textField.getText());
-                this.textField.setText("");
+        if (e.getSource() == this.settings.getDivB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                this.num1 = Double.parseDouble(this.settings.getTextField()
+                        .getText());
+                this.settings.getTextField()
+                        .setText("");
                 this.operator = '/';
             }
         }
 
-        if (e.getSource() == this.decB) {
-            if (this.textField.getText().isEmpty() || this.textField.getText() == null) {
-                this.textField.setText(this.textField.getText().concat(String.valueOf("0.")));
+        if (e.getSource() == this.settings.getDecB()) {
+            if (this.settings.getTextField()
+                    .getText().isEmpty() || this.settings.getTextField()
+                    .getText() == null) {
+                this.settings.getTextField()
+                        .setText(this.settings.getTextField()
+                                .getText().concat(String.valueOf("0.")));
             } else {
-                this.textField.setText(this.textField.getText().concat(String.valueOf('.')));
+                this.settings.getTextField()
+                        .setText(this.settings.getTextField()
+                                .getText().concat(String.valueOf('.')));
             }
         }
 
-        if (e.getSource() == this.equB) {
-            this.num2 = this.textField.getText().isEmpty() ? (this.num1 == 0 ? 0 : num1) : Double.parseDouble(this.textField.getText());
+        if (e.getSource() == this.settings.getEquB()) {
+            this.num2 = this.settings.getTextField()
+                    .getText().isEmpty() ? (this.num1 == 0 ? 0 : num1) : Double.parseDouble(this.settings.getTextField()
+                    .getText());
+
+            Calculate();
         }
 
-        if (e.getSource() == this.clrB) {
-            this.textField.setText("");
+        if (e.getSource() == this.settings.getClrB()) {
+            this.settings.getTextField()
+                    .setText("");
             this.num1 = 0;
             this.num2 = 0;
             this.result = 0;
         }
 
-        if (e.getSource() == this.delB) {
-            if (!EmptyTextField(this.textField)) {
-                this.textField.setText(this.textField.getText().substring(0, this.textField.getText().length() - 1));
+        if (e.getSource() == this.settings.getDelB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                this.settings.getTextField()
+                        .setText(this.settings.getTextField()
+                                .getText().substring(0, this.settings.getTextField()
+                                        .getText().length() - 1));
             }
         }
 
-        if (e.getSource() == this.negB) {
-            if (!EmptyTextField(this.textField)) {
-                double oppNum = Double.parseDouble(this.textField.getText()) * -1;
-                this.textField.setText(String.valueOf(oppNum));
+        if (e.getSource() == this.settings.getNegB()) {
+            if (!EmptyTextField(this.settings.getTextField()
+            )) {
+                double oppNum = Double.parseDouble(this.settings.getTextField()
+                        .getText()) * -1;
+                this.settings.getTextField()
+                        .setText(String.valueOf(oppNum));
             }
         }
     }
@@ -102,7 +133,7 @@ public class Calculator implements ActionListener {
         return textField.getText().isEmpty() == true || textField.getText() == null;
     }
 
-    private void Calculate(double num1, double num2, double result, char operator) {
+    private void Calculate() {
         switch (this.operator) {
             case '+':
                 this.result = num1 + num2;
@@ -118,7 +149,8 @@ public class Calculator implements ActionListener {
                 break;
         }
         this.result = Double.parseDouble(new DecimalFormat("##.##").format(this.result));
-        this.textField.setText(String.valueOf(this.result));
+        this.settings.getTextField()
+                .setText(String.valueOf(this.result));
         this.num1 = result;
     }
 }

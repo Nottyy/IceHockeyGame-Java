@@ -1,5 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Calculator calc = new Calculator();
+        JSettings settings = new JSettings();
+        Calculator calc = new Calculator(settings);
     }
 }
